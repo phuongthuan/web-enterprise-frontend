@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 import { getMyPosts, deletePost } from '../actions/postActions';
 import Loading from './Loading';
-
 class PostList extends Component {
 
   static propTypes = {
