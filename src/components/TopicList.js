@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, CardText, CardTitle, Modal,
+import { Button, Card, CardTitle, Modal,
   ModalHeader,
   ModalBody,
   Form,
@@ -49,7 +49,6 @@ class TopicList extends Component {
   render() {
     const { topics } = this.props.topic;
     const currentUser = this.props.auth.user;
-    console.log(currentUser);
     return (
       <div>
         {(currentUser.roles[0] === 'admin' || currentUser.roles[0] === 'coordinator') && (
@@ -64,7 +63,6 @@ class TopicList extends Component {
               <CardTitle><strong>
               <Link to={`/topics/${topic._id}`}>{topic.name}</Link>
               </strong></CardTitle>
-              <CardText>Number of Posts: {topics.length}</CardText>
             </Card>
           ))}
         </div>

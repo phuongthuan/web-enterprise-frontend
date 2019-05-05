@@ -5,19 +5,27 @@ import { Table, Button, Badge } from 'reactstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
-import { getMyPosts, deletePost } from '../actions/postActions';
+import { getAllPosts, getMyPosts, deletePost } from '../actions/postActions';
 import Loading from './Loading';
+
 class PostList extends Component {
 
   static propTypes = {
     getMyPosts: PropTypes.func.isRequired,
+    getAllPosts: PropTypes.func.isRequired,
     post: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
-    // const topicId = this.props.match.params.id;
-    this.props.getMyPosts();
+    const { user } = this.props.auth;
+
+    if (user.roles[0] === 'guest' || user.roles[0] === 'manager') {
+      this.props.getAllPosts();
+    } else if (user.roles[0] === 'student') {
+      this.props.getMyPosts();
+    }
+
   }
 
   goToContribute = () => {
@@ -31,8 +39,25 @@ class PostList extends Component {
     if (user.roles[0] === 'manager' || user.roles[0] === 'guest') {
       return (
         <tbody>
-          {posts && posts.docs && posts.docs
+          {posts && posts
             .filter(post => post.isPublished === true)
+            .map((post, index) => (
+            <tr key={post._id}>
+              <th scope="row">{index + 1}</th>
+              <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
+              <td>{post.content}</td>
+              <td>{post._topic.topicName.name}</td>
+              <td>{post._user.name}</td>
+              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
+            </tr>
+          ))}
+        </tbody>
+      )
+    } else if (user.roles[0] === 'coordinator') {
+      return (
+        <tbody>
+          {posts && posts
+            .filter(post => post.isPublished === false)
             .map((post, index) => (
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
@@ -44,18 +69,18 @@ class PostList extends Component {
           ))}
         </tbody>
       )
-    } else if (user.roles[0] === 'student' || user.roles[0] === 'coordinator') {
+    } else if (user.roles[0] === 'student') {
       return (
         <tbody>
-          {posts && posts.docs && posts.docs
+          {posts && posts
             .filter(post => post.isPublished === false)
             .map((post, index) => (
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
               <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
               <td>{post.content}</td>
+              <td>{post._topic.name}</td>
               <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
-              <td>{post.isPublished ? <Badge color="primary">publish</Badge> : <Badge color="secondary">private</Badge>}</td>
             </tr>
           ))}
         </tbody>
@@ -81,8 +106,16 @@ class PostList extends Component {
               <th>#</th>
               <th>Title</th>
               <th>Content</th>
+              {(user.roles[0] === 'student' || user.roles[0] === 'manager' || user.roles[0] === 'guest') && (
+                <th>Topic</th>
+              )}
+              {(user.roles[0] === 'manager' || user.roles[0] === 'guest' || user.roles[0] === 'coordinator') && (
+                <th>Student</th>
+              )}
               <th>Date Created</th>
-              <th>Status</th>
+              {(user.roles[0] === 'coordinator') && (
+                <th>Status</th>
+              )}
             </tr>
           </thead>
           {this.displayData()}
@@ -102,5 +135,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getMyPosts, deletePost }
+  { getAllPosts, getMyPosts, deletePost }
 )(PostList);

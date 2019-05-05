@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AppNavbar from './components/AppNavbar';
 import { Container } from 'reactstrap';
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -9,6 +9,7 @@ import { loadUser } from './actions/authActions';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Content from './components/Content';
+import history from './history';
 
 class App extends Component {
   componentDidMount() {
@@ -18,14 +19,14 @@ class App extends Component {
   render() {
     return (
         <Provider store={store}>
-          <BrowserRouter>
+          <Router history={history}>
             <div className='App'>
               <AppNavbar />
               <Container>
                 <Content />
               </Container>
             </div>
-          </BrowserRouter>
+          </Router>
         </Provider>
     );
   }

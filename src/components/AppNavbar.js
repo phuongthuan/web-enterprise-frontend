@@ -58,9 +58,9 @@ class AppNavbar extends Component {
     return (
       <div>
         <Navbar color='dark' dark expand='sm' className='mb-5'>
-          <Container>
+          <Container className="p-0">
             <Link to="/">
-              <NavbarBrand style={{ color: '#ddd' }}>NEERG</NavbarBrand>
+              <NavbarBrand style={{ color: '#ddd' }}>GREENWICH PORTAL</NavbarBrand>
             </Link>
             
             <NavbarToggler onClick={this.toggle} />
