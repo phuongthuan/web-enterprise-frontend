@@ -46,7 +46,7 @@ class PostList extends Component {
               <th scope="row">{index + 1}</th>
               <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
               <td>{post.content}</td>
-              <td>{post._topic.topicName.name}</td>
+              <td>{post._topic && post._topic.topicName && post._topic.topicName.name}</td>
               <td>{post._user.name}</td>
               <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
             </tr>

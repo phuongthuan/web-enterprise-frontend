@@ -2,6 +2,8 @@ import axios from 'axios';
 import { GET_FACULTIES, ADD_FACULTY, DELETE_FACULTY, FACULTIES_LOADING } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
+import { addFlashMessage } from './flashMessageActions';
+import history from '../history';
 
 export const getFaculties = () => (dispatch, getState) => {
   dispatch(setFacultiesLoading());
@@ -18,15 +20,24 @@ export const getFaculties = () => (dispatch, getState) => {
     );
 };
 
-export const addFaculty = faculty => (dispatch, getState) => {
+export const createFaculty = faculty => (dispatch, getState) => {
   axios
     .post(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/faculties`, faculty, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: ADD_FACULTY,
         payload: res.data
-      })
-    )
+      });
+
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Create Faculty Successfully!'
+        })
+      );
+      
+      history.push('/');
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );
@@ -35,12 +46,13 @@ export const addFaculty = faculty => (dispatch, getState) => {
 export const deleteFaculty = id => (dispatch, getState) => {
   axios
     .delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/faculties/${id}`, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: DELETE_FACULTY,
         payload: id
-      })
-    )
+      });
+
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );

@@ -15,7 +15,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
-import history from '../../history';
 
 class LoginForm extends Component {
   state = {
@@ -75,7 +74,6 @@ class LoginForm extends Component {
 
     // Attempt to login
     this.props.login(user);
-    history.push('/');
   };
 
   render() {

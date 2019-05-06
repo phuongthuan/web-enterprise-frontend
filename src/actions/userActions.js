@@ -1,7 +1,9 @@
 import axios from 'axios';
-import { GET_USERS, ADD_USER, DELETE_USER, USERS_LOADING } from './types';
+import { GET_USERS, ADD_USER, DELETE_USER, USERS_LOADING, ADD_USER_FAIL } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
+import { addFlashMessage } from './flashMessageActions';
+import history from '../history';
 
 export const getUsers = () => (dispatch, getState) => {
   dispatch(setUsersLoading());
@@ -18,18 +20,32 @@ export const getUsers = () => (dispatch, getState) => {
     );
 };
 
-export const addUser = user => (dispatch, getState) => {
+export const createUser = user => (dispatch, getState) => {
   axios
     .post(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/users`, user, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: ADD_USER,
         payload: res.data
-      })
-    )
-    .catch(err =>
-      dispatch(returnErrors(err.response.data, err.response.status))
-    );
+      });
+
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Create User Successfully!'
+        })
+      );
+      
+      history.push('/');
+    })
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'ADD_USER_FAIL')
+      );
+      dispatch({
+        type: ADD_USER_FAIL
+      });
+    });
 };
 
 export const deleteFaculty = id => (dispatch, getState) => {

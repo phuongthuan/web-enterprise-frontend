@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
-import FacultyList from './FacultyList';
 import CoordinatorPage from '../containers/CoordinatorPage';
 import StudentPage from '../containers/StudentPage';
 import ManagerPage from '../containers/ManagerPage';
 import GuestPage from '../containers/GuestPage';
+import AdminPage from '../containers/AdminPage';
 
 class Content extends Component {
   static propTypes = {
@@ -17,7 +17,7 @@ class Content extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     if (isAuthenticated && user && user.roles[0] === 'admin') {
-      return <FacultyList />
+      return <AdminPage />
     }
 
     if (isAuthenticated && user && user.roles[0] === 'coordinator') {

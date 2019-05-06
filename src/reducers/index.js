@@ -6,6 +6,7 @@ import postReducer from './postReducer';
 import topicReducer from './topicReducer';
 import userReducer from './userReducer';
 import commentReducer from './commentReducer';
+import flashMessageReducer from './flashMessageReducer';
 
 export default combineReducers({
   error: errorReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   topic: topicReducer,
   user: userReducer,
   comment: commentReducer,
+  flashMessage: flashMessageReducer,
 });

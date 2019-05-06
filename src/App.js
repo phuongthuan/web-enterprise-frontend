@@ -10,6 +10,7 @@ import { loadUser } from './actions/authActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Content from './components/Content';
 import history from './history';
+import FlashMessagesList from './components/FlashMessagesList';
 
 class App extends Component {
   componentDidMount() {
@@ -23,6 +24,7 @@ class App extends Component {
             <div className='App'>
               <AppNavbar />
               <Container>
+                <FlashMessagesList />
                 <Content />
               </Container>
             </div>

@@ -82,7 +82,6 @@ class CreatePostForm extends Component {
     };
 
     this.props.createPost(newPost);
-    this.props.history.push('/');
   }
   
   render() {
@@ -118,7 +117,7 @@ class CreatePostForm extends Component {
             </Input>
           </FormGroup>
 
-          <Button className="mt-3">Create</Button>
+          <Button size="sm" className="mt-3">Create Post</Button>
 
         </Form>
       </div>

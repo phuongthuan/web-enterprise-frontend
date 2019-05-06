@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
+import { addFlashMessage } from './flashMessageActions';
+import history from '../history';
 
 import {
   USER_LOADED,
@@ -7,7 +9,7 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
 } from './types';
 
 // Check token & load user
@@ -17,12 +19,12 @@ export const loadUser = () => (dispatch, getState) => {
 
   axios
     .get(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/auth/user`, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: USER_LOADED,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
@@ -45,12 +47,22 @@ export const login = ({ email, password }) => dispatch => {
 
   axios
     .post(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/auth`, body, config)
-    .then(res =>
+    .then(res => {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
-      })
-    )
+      });
+      
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Login successfully!'
+        })
+      );
+
+      history.push('/');
+
+    })
     .catch(err => {
       dispatch(
         returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')

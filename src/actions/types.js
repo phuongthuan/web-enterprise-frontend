@@ -14,6 +14,7 @@ export const DELETE_FACULTY = "DELETE_FACULTY";
 export const GET_USERS = "GET_USERS";
 export const USERS_LOADING = "USERS_LOADING";
 export const ADD_USER = "ADD_USER";
+export const ADD_USER_FAIL = "ADD_USER_FAIL";
 export const DELETE_USER = "DELETE_USER";
 
 
@@ -39,3 +40,6 @@ export const DELETE_POST = "DELETE_POST";
 export const AUTH_ERROR = "AUTH_ERROR";
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+export const ADD_FLASH_MESSAGE = 'ADD_FLASH_MESSAGE';
+export const DELETE_FLASH_MESSAGE = 'DELETE_FLASH_MESSAGE';
