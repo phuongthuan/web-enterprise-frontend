@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
+  Toast,
+  ToastBody,
   Form,
   FormGroup,
-  Label,
+  Spinner,
   Input,
-  NavLink,
   Alert
 } from 'reactstrap';
 import { connect } from 'react-redux';
@@ -18,7 +16,6 @@ import { clearErrors } from '../../actions/errorActions';
 
 class LoginForm extends Component {
   state = {
-    modal: false,
     email: '',
     password: '',
     msg: null
@@ -26,13 +23,14 @@ class LoginForm extends Component {
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
+    loading: PropTypes.bool,
     error: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
+    clearErrors: PropTypes.func.isRequired,
   };
 
   componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props;
+    const { error } = this.props;
     if (error !== prevProps.error) {
       // Check for register error
       if (error.id === 'LOGIN_FAIL') {
@@ -41,57 +39,34 @@ class LoginForm extends Component {
         this.setState({ msg: null });
       }
     }
-
-    // If authenticated, close modal
-    if (this.state.modal) {
-      if (isAuthenticated) {
-        this.toggle();
-      }
-    }
   }
 
-  toggle = () => {
-    // Clear errors
-    this.props.clearErrors();
-    this.setState({
-      modal: !this.state.modal
-    });
-  };
-
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = e => {
     e.preventDefault();
 
     const { email, password } = this.state;
-
     const user = {
       email,
       password
     };
 
-    // Attempt to login
     this.props.login(user);
   };
 
   render() {
+    const { loading } = this.props;
     return (
-      <div>
-        <NavLink onClick={this.toggle} href='#'>
-          Login
-        </NavLink>
-
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Login</ModalHeader>
-          <ModalBody>
-            {this.state.msg ? (
-              <Alert color='danger'>{this.state.msg}</Alert>
-            ) : null}
-            <Form onSubmit={this.onSubmit}>
+      <div className="p-3 my-2">
+        <Toast style={{ width: '400px' }}>
+          <ToastBody>
+              <h5 className="d-flex justify-content-center mb-3">Login</h5>
+              <Form onSubmit={this.onSubmit}>
+              {this.state.msg ? (
+                <Alert color='danger'>{this.state.msg}</Alert>
+              ) : null}
               <FormGroup>
-                <Label for='email'>Email</Label>
                 <Input
                   type='email'
                   name='email'
@@ -100,8 +75,9 @@ class LoginForm extends Component {
                   className='mb-3'
                   onChange={this.onChange}
                 />
+              </FormGroup>
 
-                <Label for='password'>Password</Label>
+              <FormGroup>
                 <Input
                   type='password'
                   name='password'
@@ -110,13 +86,15 @@ class LoginForm extends Component {
                   className='mb-3'
                   onChange={this.onChange}
                 />
-                <Button color='dark' style={{ marginTop: '2rem' }} block>
-                  Login
-                </Button>
               </FormGroup>
+
+              <Button color='dark' block>{loading
+                ? <Spinner size="sm" color="secondary" /> 
+                : 'Login'}</Button>
+
             </Form>
-          </ModalBody>
-        </Modal>
+          </ToastBody>
+        </Toast>
       </div>
     );
   }
@@ -124,6 +102,7 @@ class LoginForm extends Component {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.isLoading,
   error: state.error
 });
 

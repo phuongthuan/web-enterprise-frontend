@@ -32,6 +32,14 @@ class PostList extends Component {
     this.props.history.push('/newpost');
   }
 
+  displayPostContent = (text) => {
+    if (text.length > 30) {
+      return text.substring(0,30) + '...';
+    } else {
+      return text;
+    }
+  }
+
   displayData = () => {
     const { user } = this.props.auth;
     const { posts } = this.props.post;
@@ -45,10 +53,10 @@ class PostList extends Component {
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
               <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
-              <td>{post.content}</td>
+              <td>{this.displayPostContent(post.content)}</td>
               <td>{post._topic && post._topic.topicName && post._topic.topicName.name}</td>
               <td>{post._user.name}</td>
-              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
+              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY")}</td>
             </tr>
           ))}
         </tbody>
@@ -62,8 +70,8 @@ class PostList extends Component {
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
               <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
-              <td>{post.content}</td>
-              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
+              <td>{this.displayPostContent(post.content)}</td>
+              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY")}</td>
               <td>{post.isPublished ? <Badge color="primary">publish</Badge> : <Badge color="secondary">private</Badge>}</td>
             </tr>
           ))}
@@ -77,10 +85,14 @@ class PostList extends Component {
             .map((post, index) => (
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
-              <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
-              <td>{post.content}</td>
+              <td>
+                <Link to={`/posts/${post._id}`}>{post.title}</Link>
+                <br />
+                <Link to={`/posts/edit/${post._id}`}><small>Edit</small></Link>
+              </td>
+              <td>{this.displayPostContent(post.content)}</td>
               <td>{post._topic.name}</td>
-              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
+              <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY")}</td>
             </tr>
           ))}
         </tbody>

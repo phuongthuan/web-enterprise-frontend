@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PUBLISH_POST, GET_POSTS, GET_POST, ADD_POST, DELETE_POST, POSTS_LOADING, GET_MY_POSTS, GET_ALL_POSTS } from './types';
+import { UPDATE_POST, PUBLISH_POST, GET_POSTS, GET_POST, ADD_POST, DELETE_POST, POSTS_LOADING, GET_MY_POSTS, GET_ALL_POSTS } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
 import { addFlashMessage } from './flashMessageActions';
@@ -92,6 +92,7 @@ export const publishPost = postId => (dispatch, getState) => {
 };
 
 export const createPost = post => (dispatch, getState) => {
+  dispatch({ type: POSTS_LOADING });
   axios
     .post(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/posts`, post, tokenConfig(getState))
     .then(res => {
@@ -109,6 +110,30 @@ export const createPost = post => (dispatch, getState) => {
 
       history.push('/');
 
+    })
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    );
+};
+
+export const updatePost = (postId, post) => (dispatch, getState) => {
+  dispatch({ type: POSTS_LOADING });
+  axios
+    .put(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/posts/${postId}`, post, tokenConfig(getState))
+    .then(res => {
+      dispatch({
+        type: UPDATE_POST,
+        payload: res.data
+      })
+
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Update Post Successfully!'
+        })
+      );
+
+      history.push('/');
     })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))

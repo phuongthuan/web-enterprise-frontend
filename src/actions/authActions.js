@@ -10,6 +10,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
+  LOGIN_LOADING,
 } from './types';
 
 // Check token & load user
@@ -35,6 +36,9 @@ export const loadUser = () => (dispatch, getState) => {
 
 // Login User
 export const login = ({ email, password }) => dispatch => {
+  
+  dispatch({ type: LOGIN_LOADING });
+
   // Headers
   const config = {
     headers: {

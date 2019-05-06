@@ -7,6 +7,7 @@ import StudentPage from '../containers/StudentPage';
 import ManagerPage from '../containers/ManagerPage';
 import GuestPage from '../containers/GuestPage';
 import AdminPage from '../containers/AdminPage';
+import LoginPage from '../containers/LoginPage';
 
 class Content extends Component {
   static propTypes = {
@@ -15,6 +16,8 @@ class Content extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
+
+    if (!isAuthenticated) return <LoginPage />
 
     if (isAuthenticated && user && user.roles[0] === 'admin') {
       return <AdminPage />
