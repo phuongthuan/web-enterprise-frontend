@@ -41,8 +41,17 @@ class FacultyList extends Component {
     history.push('/newfaculty');
   }
 
+  getPercent = (contribution) => {
+    const { faculties } = this.props.faculty;
+
+    return (contribution/faculties.totalPost)*100;
+
+  }
+
   render() {
     const { faculties } = this.props.faculty;
+
+    
     return (
       <>
         <Button 
@@ -59,11 +68,12 @@ class FacultyList extends Component {
           className="ml-3 mb-4"
         >+ Create new faculty</Button>
 
-        {faculties && faculties.map(faculty => (
+        {faculties && faculties.faculties && faculties.faculties.map(faculty => (
           <Card key={faculty._id} className="mb-4" body>
             <CardTitle>Faculty name: {faculty.name}</CardTitle>
             <CardText>Manager: <strong>{this.getManager(faculty._manager)}</strong></CardText>
-            <CardText>Number of Contributions: {faculties.length}</CardText>
+            <CardText>Number of contributions: {faculty.count}</CardText>
+            <CardText>Percent of contributions: {this.getPercent(faculty.count)}%</CardText>
           </Card>
         ))}
       </>

@@ -12,6 +12,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case USERS_LOADING:
+    return {
+      ...state,
+      loading: true
+    };
     case GET_USERS:
       return {
         ...state,
@@ -21,17 +26,14 @@ export default function(state = initialState, action) {
     case DELETE_USER:
       return {
         ...state,
-        users: state.users.filter(user => user._id !== action.payload)
+        users: state.users.filter(user => user._id !== action.payload),
+        loading: false,
       };
     case ADD_USER:
       return {
         ...state,
-        users: [action.payload, ...state.users]
-      };
-    case USERS_LOADING:
-      return {
-        ...state,
-        loading: true
+        users: [action.payload, ...state.users],
+        loading: false,
       };
     default:
       return state;

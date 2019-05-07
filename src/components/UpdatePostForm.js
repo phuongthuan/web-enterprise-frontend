@@ -117,7 +117,6 @@ class UpdatePostForm extends Component {
           </FormGroup>
 
           <FormGroup>
-            <Label>Image</Label>
             <Input onChange={this.uploadFile} type="file" name="fileUrl" />
           </FormGroup>
 

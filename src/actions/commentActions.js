@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_COMMENTS, ADD_COMMENT, COMMENTS_LOADING } from './types';
+import { GET_COMMENTS, ADD_COMMENT, COMMENTS_LOADING, CLEAR_COMMENTS } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
 
@@ -31,6 +31,12 @@ export const addComment = (postId, comment) => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status))
     );
 };
+
+export const clearCommentList = () => {
+  return {
+    type: CLEAR_COMMENTS
+  }
+}
 
 export const setCommentsLoading = () => {
   return {

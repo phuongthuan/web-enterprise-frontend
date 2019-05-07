@@ -6,7 +6,7 @@ import { CardImg, CardBody, CardTitle, CardText, Card, Button, ToastBody, Form, 
 import axios from 'axios';
 
 import { getPost, publishPost } from '../actions/postActions';
-import { getComments, addComment } from '../actions/commentActions';
+import { getComments, addComment, clearCommentList } from '../actions/commentActions';
 import Loading from './Loading';
 
 class SinglePost extends Component {
@@ -29,10 +29,17 @@ class SinglePost extends Component {
     this.props.getComments(postId);
   }
 
+  componentWillUnmount() {
+    console.log('leave')
+    this.props.clearCommentList();
+  }
+  
+
   onSubmit = e => {
     e.preventDefault();
     const postId = this.props.match.params.id;
     this.props.addComment(postId, this.state);
+    this.setState({ content: '' });
   }
 
   downloadFile = () => {
@@ -57,7 +64,6 @@ class SinglePost extends Component {
   publishPost = () => {
     const postId = this.props.match.params.id;
     this.props.publishPost(postId);
-    this.props.history.push('/');
   }
   
   render() {
@@ -79,27 +85,22 @@ class SinglePost extends Component {
           <hr />
 
           {user.roles[0] === 'manager' && (<Button size="sm" onClick={this.downloadFile}>Download</Button>)}
+          
           {user.roles[0] === 'coordinator' && (<Button color="info" size="sm" onClick={this.publishPost}>Approve</Button>)}
 
-          <hr />
-
           {comments && comments.map(comment => (
-            <>
-              <div key={comment._id}>
-                <Toast style={{ maxWidth: '100%', marginBottom: '20px' }}>
-                  <ToastHeader>
-                    <span>{comment._user.email} ({comment._user.roles[0]})</span>
-                  </ToastHeader>
-                  <ToastBody>
-                    {comment.content}
-                    <small className="d-block">{moment(comment.posted_date).fromNow()}</small>
-                  </ToastBody>
-                </Toast>
-              </div>
-              <hr />
-            </>
+            <div key={comment._id}>
+              <Toast style={{ maxWidth: '100%', marginBottom: '20px' }}>
+                <ToastHeader>
+                  <span>{comment._user.email} ({comment._user.roles[0]})</span>
+                </ToastHeader>
+                <ToastBody>
+                  {comment.content}
+                  <small className="d-block">{moment(comment.posted_date).fromNow()}</small>
+                </ToastBody>
+              </Toast>
+            </div>
           ))}
-
 
           <Form onSubmit={this.onSubmit}>
             <FormGroup>
@@ -129,5 +130,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getPost, getComments, publishPost, addComment }
+  { getPost, getComments, publishPost, addComment, clearCommentList }
 )(SinglePost);

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
   Collapse,
   Navbar,
@@ -7,7 +7,8 @@ import {
   Nav,
   NavItem,
   Container,
-  Badge
+  Badge,
+  NavLink
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -34,11 +35,22 @@ class AppNavbar extends Component {
     history.push('/');
   }
 
+  goToUsersManagement = () => {
+    history.push('/users');
+  }
+
   render() {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <Fragment>
+      <>
+        {user.roles[0] === 'admin' && (
+          <NavItem>
+            <NavLink className="text-grey" type="button" onClick={this.goToUsersManagement}>
+              Users List |
+            </NavLink>
+          </NavItem>
+        )}
         <NavItem>
           <span className='navbar-text mr-3'>
             <strong>{user ? `${user.email}` : ''}</strong>
@@ -48,7 +60,7 @@ class AppNavbar extends Component {
         <NavItem>
           <Logout />
         </NavItem>
-      </Fragment>
+      </>
     );
 
     const guestLinks = (

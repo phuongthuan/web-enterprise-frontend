@@ -42,6 +42,7 @@ export const DELETE_POST = "DELETE_POST";
 export const AUTH_ERROR = "AUTH_ERROR";
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const CLEAR_COMMENTS = 'CLEAR_COMMENTS';
 
 export const ADD_FLASH_MESSAGE = 'ADD_FLASH_MESSAGE';
 export const DELETE_FLASH_MESSAGE = 'DELETE_FLASH_MESSAGE';

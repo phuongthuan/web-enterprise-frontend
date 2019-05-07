@@ -48,15 +48,23 @@ export const createUser = user => (dispatch, getState) => {
     });
 };
 
-export const deleteFaculty = id => (dispatch, getState) => {
+export const deleteUser = id => (dispatch, getState) => {
   axios
     .delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/users/${id}`, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: DELETE_USER,
         payload: id
-      })
-    )
+      });
+
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Delete user successfully!'
+        })
+      );
+
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );

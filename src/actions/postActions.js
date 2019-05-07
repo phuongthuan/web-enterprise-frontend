@@ -129,7 +129,7 @@ export const updatePost = (postId, post) => (dispatch, getState) => {
       dispatch(
         addFlashMessage({
           type: 'success',
-          text: 'Update Post Successfully!'
+          text: 'Update post successfully!'
         })
       );
 
@@ -143,12 +143,20 @@ export const updatePost = (postId, post) => (dispatch, getState) => {
 export const deletePost = id => (dispatch, getState) => {
   axios
     .delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/posts/${id}`, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
       dispatch({
         type: DELETE_POST,
         payload: id
-      })
-    )
+      });
+
+      dispatch(
+        addFlashMessage({
+          type: 'success',
+          text: 'Delete post successfully!'
+        })
+      );
+
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );

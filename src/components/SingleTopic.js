@@ -21,6 +21,14 @@ class SingleTopic extends Component {
     this.props.getPosts(topicId);
   }
 
+  displayPostContent = (text) => {
+    if (text.length > 30) {
+      return text.substring(0,30) + '...';
+    } else {
+      return text;
+    }
+  }
+
   displayData = () => {
     const { user } = this.props.auth;
     const { posts } = this.props.post;
@@ -34,7 +42,7 @@ class SingleTopic extends Component {
             <tr key={post._id}>
               <th scope="row">{index + 1}</th>
               <td><Link to={`/posts/${post._id}`}>{post.title}</Link></td>
-              <td>{post.content}</td>
+              <td>{this.displayPostContent(post.content)}</td>
               <td>{post._user.name}</td>
               <td>{moment(post.posted_date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
               <td>{post.isPublished ? <Badge color="primary">publish</Badge> : <Badge color="secondary">private</Badge>}</td>

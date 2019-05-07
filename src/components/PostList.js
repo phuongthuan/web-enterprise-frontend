@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Table, Button, Badge } from 'reactstrap';
+import { Table, Button, Badge, Modal, ModalFooter, ModalBody, ModalHeader } from 'reactstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
@@ -9,6 +9,11 @@ import { getAllPosts, getMyPosts, deletePost } from '../actions/postActions';
 import Loading from './Loading';
 
 class PostList extends Component {
+
+  state = {
+    modal: false,
+    selectedPostId: '',
+  }
 
   static propTypes = {
     getMyPosts: PropTypes.func.isRequired,
@@ -26,6 +31,12 @@ class PostList extends Component {
       this.props.getMyPosts();
     }
 
+  }
+
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal
+    }));
   }
 
   goToContribute = () => {
@@ -88,7 +99,13 @@ class PostList extends Component {
               <td>
                 <Link to={`/posts/${post._id}`}>{post.title}</Link>
                 <br />
-                <Link to={`/posts/edit/${post._id}`}><small>Edit</small></Link>
+                  <Link to={`/posts/edit/${post._id}`}><small>Edit</small></Link>
+                  <small 
+                    onClick={() => this.selectPost(post._id)} 
+                    type="button" 
+                    className="ml-3 btn-link">
+                    Delete
+                  </small>
               </td>
               <td>{this.displayPostContent(post.content)}</td>
               <td>{post._topic.name}</td>
@@ -100,8 +117,14 @@ class PostList extends Component {
     }
   }
 
-  onDeleteClick = id => {
-    this.props.deletePost(id);
+  selectPost = (id) => {
+    this.toggle();
+    this.setState({ selectedPostId: id });
+  }
+
+  onDeleteClick = () => {
+    this.props.deletePost(this.state.selectedPostId);
+    this.toggle();
   };
 
   render() {
@@ -112,10 +135,10 @@ class PostList extends Component {
 
     return (
       <>
-        <Table borderless>
+        <Table>
           <thead>
             <tr>
-              <th>#</th>
+              <th>No</th>
               <th>Title</th>
               <th>Content</th>
               {(user.roles[0] === 'student' || user.roles[0] === 'manager' || user.roles[0] === 'guest') && (
@@ -133,8 +156,19 @@ class PostList extends Component {
           {this.displayData()}
         </Table>
         {user.roles[0] === 'student' && (
-          <Button onClick={this.goToContribute}>Contribute +</Button>
+          <Button size="sm" onClick={this.goToContribute}>Contribute +</Button>
         )}
+
+        <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false}>
+          <ModalHeader toggle={this.toggle}>Confirm Delete</ModalHeader>
+          <ModalBody>
+            Are you sure to want to delete this item?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.onDeleteClick}>Yes</Button>{' '}
+            <Button color="danger" onClick={this.toggle}>No</Button>
+          </ModalFooter>
+        </Modal>
       </>
     )
   }

@@ -52,12 +52,10 @@ class TopicList extends Component {
     return (
       <div>
         {(currentUser.roles[0] === 'admin' || currentUser.roles[0] === 'coordinator') && (
-          <div className="row">
-            <Button onClick={this.toggle}>Add Topic +</Button>
-          </div>
+          <Button onClick={this.toggle}>Add Topic +</Button>
         )}
 
-        <div className="mt-4 row d-flex flex-column">
+        <div className="mt-4 d-flex flex-column">
           {topics && topics.map(topic => (
             <Card key={topic._id} className="mb-4" body>
               <CardTitle><strong>
